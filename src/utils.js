@@ -1,12 +1,21 @@
-export const setNewOffset = (card, mouseMoveDir = { x: 0, y: 0 }) => {
-    const offsetLeft = card.offsetLeft - mouseMoveDir.x;
-    const offsetTop = card.offsetTop - mouseMoveDir.y;
+export const setNewOffset = (element, mouseMoveDir = { x: 0, y: 0 }) => {
+    const rect = element.getBoundingClientRect();
+    const windowWidth = window.innerWidth;
 
-    return {
-        x: offsetLeft < 0 ? 0 : offsetLeft,
-        y: offsetTop < 0 ? 0 : offsetTop,
-    };
+    let newX = rect.left - mouseMoveDir.x;
+    let newY = rect.top - mouseMoveDir.y;
+
+    // Ensure the card stays within the left boundary
+    newX = Math.max(10, newX);
+
+    // Ensure the card stays within the right boundary
+    newX = Math.min(newX, windowWidth - rect.width - 20);
+    // Ensure the card doesn't go above the top of the window
+    newY = Math.max(10, newY);
+
+    return { x: newX, y: newY };
 };
+
 
 
 export function autoGrow(textAreaRef) {

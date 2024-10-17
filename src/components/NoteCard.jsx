@@ -9,7 +9,7 @@ const NoteCard = ({ note }) => {
   let mouseStartPos = { x: 0, y: 0 };
 
   const { setSelectedNote } = useContext(NoteContext);
-
+  const MAX_CHARS = 350;
   const [saving, setSaving] = useState(false);
   const keyUpTimer = useRef(null);
 
@@ -17,12 +17,15 @@ const NoteCard = ({ note }) => {
   const colors = JSON.parse(note.colors);
   const [position, setPosition] = useState(JSON.parse(note.position));
 
+  const [charCount, setCharCount] = useState(body.length);
+
   const cardRef = useRef(null);
   const textAreaRef = useRef(null);
 
   useEffect(() => {
     autoGrow(textAreaRef);
     setZIndex(cardRef.current);
+    setCharCount(textAreaRef.current.value.length);
   }, []);
 
   const mouseDown = (e) => {
@@ -85,6 +88,16 @@ const NoteCard = ({ note }) => {
     }, 2000);
   };
 
+  const handleInput = (e) => {
+    const text = e.target.value;
+    if (text.length <= MAX_CHARS) {
+      setCharCount(text.length);
+      autoGrow(textAreaRef);
+    } else {
+      e.target.value = text.slice(0, MAX_CHARS);
+    }
+  };
+
   return (
     <div
       className="card"
@@ -113,13 +126,25 @@ const NoteCard = ({ note }) => {
           ref={textAreaRef}
           defaultValue={body}
           style={{ color: colors.colorText }}
-          onInput={() => autoGrow(textAreaRef)}
+          onInput={handleInput}
           onFocus={() => {
             setZIndex(cardRef.current);
             setSelectedNote(note);
           }}
           onKeyUp={handleKeyUp}
+          maxLength={MAX_CHARS}
         ></textarea>
+        <div
+          style={{
+            color: colors.colorText,
+            textAlign: "right",
+            width: "100%",
+            fontSize: "12px",
+            fontWeight: "bold",
+          }}
+        >
+          {charCount}/{MAX_CHARS}
+        </div>
       </div>
     </div>
   );
