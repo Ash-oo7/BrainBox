@@ -1,25 +1,33 @@
-import { useEffect, useState } from "react";
-import { createContext } from "react";
+import { useEffect, useState, createContext } from "react";
 import Spinner from "../icons/Spinner";
 import { db } from "../appwrite/databases";
+import { useAuth } from "./AuthContext";
 
 export const NoteContext = createContext();
 
 const NoteProvider = ({ children }) => {
-  const [loading, setLoading] = useState(true);
+  const { userId, loading, setLoading } = useAuth();
   const [notes, setNotes] = useState([]);
   const [selectedNote, setSelectedNote] = useState(null);
 
   const contextData = { notes, setNotes, selectedNote, setSelectedNote };
 
   useEffect(() => {
-    init();
-  }, []);
+    if (userId) {
+      init();
+    }
+  }, [userId]);
 
   const init = async () => {
-    const response = await db.notes.list();
-    setNotes(response.documents);
-    setLoading(false);
+    try {
+      const response = await db.notes.list(userId);
+
+      setNotes(response.documents);
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

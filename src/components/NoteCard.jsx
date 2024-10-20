@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useContext } from "react";
-import { setNewOffset, autoGrow, setZIndex, bodyParser } from "../utils";
+import { setNewOffset, autoGrow, setZIndex, bodyParser } from "../utils/utils";
 import { db } from "../appwrite/databases";
 import Spinner from "../icons/Spinner";
 import DeleteButton from "./DeleteButton";
@@ -17,7 +17,7 @@ const NoteCard = ({ note }) => {
   const colors = JSON.parse(note.colors);
   const [position, setPosition] = useState(JSON.parse(note.position));
 
-  const [charCount, setCharCount] = useState(body.length);
+  const [charCount, setCharCount] = useState(body ? body.length : 0);
 
   const cardRef = useRef(null);
   const textAreaRef = useRef(null);
