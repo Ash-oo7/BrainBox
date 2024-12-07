@@ -1,4 +1,4 @@
-# Brainbox – Your Desktop-Only Sticky Notes App  
+# BrainBox – Your Desktop-Only Sticky Notes App  
 A minimal, full-stack sticky notes app designed for desktops to organize important tasks efficiently.  
 
 ---
